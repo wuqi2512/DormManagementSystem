@@ -1,0 +1,15 @@
+E:\Github\DormManagementSystem\DormManagementSystem\bin\Debug\net7.0\DormManagementSystem.exe
+E:\Github\DormManagementSystem\DormManagementSystem\bin\Debug\net7.0\DormManagementSystem.deps.json
+E:\Github\DormManagementSystem\DormManagementSystem\bin\Debug\net7.0\DormManagementSystem.runtimeconfig.json
+E:\Github\DormManagementSystem\DormManagementSystem\bin\Debug\net7.0\DormManagementSystem.dll
+E:\Github\DormManagementSystem\DormManagementSystem\bin\Debug\net7.0\DormManagementSystem.pdb
+E:\Github\DormManagementSystem\DormManagementSystem\obj\Debug\net7.0\DormManagementSystem.csproj.AssemblyReference.cache
+E:\Github\DormManagementSystem\DormManagementSystem\obj\Debug\net7.0\DormManagementSystem.GeneratedMSBuildEditorConfig.editorconfig
+E:\Github\DormManagementSystem\DormManagementSystem\obj\Debug\net7.0\DormManagementSystem.AssemblyInfoInputs.cache
+E:\Github\DormManagementSystem\DormManagementSystem\obj\Debug\net7.0\DormManagementSystem.AssemblyInfo.cs
+E:\Github\DormManagementSystem\DormManagementSystem\obj\Debug\net7.0\DormManagementSystem.csproj.CoreCompileInputs.cache
+E:\Github\DormManagementSystem\DormManagementSystem\obj\Debug\net7.0\DormManagementSystem.dll
+E:\Github\DormManagementSystem\DormManagementSystem\obj\Debug\net7.0\refint\DormManagementSystem.dll
+E:\Github\DormManagementSystem\DormManagementSystem\obj\Debug\net7.0\DormManagementSystem.pdb
+E:\Github\DormManagementSystem\DormManagementSystem\obj\Debug\net7.0\DormManagementSystem.genruntimeconfig.cache
+E:\Github\DormManagementSystem\DormManagementSystem\obj\Debug\net7.0\ref\DormManagementSystem.dll
