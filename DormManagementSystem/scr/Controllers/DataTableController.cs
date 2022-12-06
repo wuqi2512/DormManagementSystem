@@ -1,4 +1,5 @@
 ﻿using DormManagementSystem.Widgets;
+using static DormManagementSystem.Common;
 
 namespace DormManagementSystem.Controllers
 {
@@ -13,9 +14,9 @@ namespace DormManagementSystem.Controllers
             tableView = new Table();
         }
 
-        public void SetData(int row, int col, string[,] texts)
+        public void SetData(string[,] texts)
         {
-            tableView.SetRowAndCol(row, col);
+            tableView.SetRowAndCol((int)texts.GetLongLength(0), (int)texts.GetLongLength(1));
             tableView.SetTableTexts(texts);
         }
 
@@ -25,35 +26,48 @@ namespace DormManagementSystem.Controllers
             switch (key)
             {
                 case ConsoleKey.Escape: UIManager.Instance.SwitchCurrentController(UIManager.Instance.Menu); break;
-                case ConsoleKey.Spacebar: ClickButton(); break;
+                case ConsoleKey.Backspace: ClickBackspace(); break;
+                case ConsoleKey.Spacebar: ClickSpace(); break;
             }
 
             tableView.PrintText();
             tableView.PrintOutline();
         }
 
-        private void ClickButton()
+        private void ClickBackspace()
+        {
+            UIManager.Instance.Menu.Model.DeleteStudent(tableView.RowIndex);
+            UIManager.Instance.InfoBlock.AddInfo("删除成功");
+        }
+
+        private void ClickSpace()
         {
             UIManager.Instance.InfoBlock.AddInfo("请输入修改后的值");
             var position = tableView.GetIndexPosition();
             int index = tableView.RowIndex;
 
             Console.SetCursorPosition(position.left, position.top);
-            while (true)
-            {
 
-                string input = Console.ReadLine();
-                switch (tableView.ColIndex)
-                {
-                    case 0: UIManager.Instance.Menu.Model.ModifyStudentID(index, Convert.ToInt32(input)); break;
-                    case 1: UIManager.Instance.Menu.Model.ModifyName(index, input); break;
-                    case 2: UIManager.Instance.Menu.Model.ModifyDormID(index, Convert.ToInt32(input)); break;
-                }
-                break;
+            string input = Console.ReadLine();
+            if (input == null)
+            {
+                UIManager.Instance.InfoBlock.AddInfo("输入为空,修改失败");
+                return;
+            }
+            else if (tableView.ColIndex != 1 && StringToInt(input) == -1)
+            {
+                UIManager.Instance.InfoBlock.AddInfo("输入错误,修改失败");
+                return;
+            }
+            
+            switch (tableView.ColIndex)
+            {
+                case 0: UIManager.Instance.Menu.Model.ModifyStudentID(index, StringToInt(input)); break;
+                case 1: UIManager.Instance.Menu.Model.ModifyName(index, input); break;
+                case 2: UIManager.Instance.Menu.Model.ModifyDormID(index, StringToInt(input)); break;
             }
 
             UIManager.Instance.InfoBlock.AddInfo("修改成功");
-            UIManager.Instance.SwitchCurrentController(UIManager.Instance.Menu);
         }
     }
 }

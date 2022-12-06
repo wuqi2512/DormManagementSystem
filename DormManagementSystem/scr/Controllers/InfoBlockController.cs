@@ -42,5 +42,10 @@ namespace DormManagementSystem.Controllers
             View.PrintText();
             View.PrintOutline();
         }
+
+        public (int left, int top) GetPosition()
+        {
+            return blockView.GetPosition();
+        }
     }
 }

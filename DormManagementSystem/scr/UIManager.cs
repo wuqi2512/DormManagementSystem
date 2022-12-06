@@ -30,6 +30,7 @@ namespace DormManagementSystem
         public MenuController Menu { get; private set; }
         public DataTableController DataTable { get; private set; }
         public InfoBlockController InfoBlock { get; private set; }
+        public DataTableController MatchDataTable { get; private set; }
 
         private UIManager()
         {
@@ -42,7 +43,7 @@ namespace DormManagementSystem
             DataTable = new DataTableController();
             DataTable.Initialize();
             DataTable.View.SetPosition(15, 8);
-            DataTable.SetData(Menu.Model.GetDataAmount(), 3, Menu.Model.GetAllStudent());
+            DataTable.SetData(Menu.Model.GetAllStudentData());
             DataTable.View.PrintText();
             DataTable.View.PrintOutline();
 
@@ -50,6 +51,10 @@ namespace DormManagementSystem
             InfoBlock.Initialize();
             InfoBlock.View.SetPosition(15, 0);
             InfoBlock.AddInfo("欢迎进入寝室管理系统");
+
+            MatchDataTable = new DataTableController();
+            MatchDataTable.Initialize();
+            MatchDataTable.View.SetPosition(55, 8);
 
             currentController = Menu;
         }
@@ -60,9 +65,11 @@ namespace DormManagementSystem
             {
                 currentController?.Update(Console.ReadKey().Key);
 
+                Console.Clear();
+
                 Menu.View.PrintText();
                 Menu.View.PrintOutline();
-                DataTable.SetData(Menu.Model.GetDataAmount(), 3, Menu.Model.GetAllStudent());
+                DataTable.SetData(Menu.Model.GetAllStudentData());
                 DataTable.View.PrintText();
                 DataTable.View.PrintOutline();
                 InfoBlock.View.PrintText();
@@ -78,6 +85,13 @@ namespace DormManagementSystem
             currentController = controller;
             controller.View.PrintText();
             controller.View.PrintOutline();
+        }
+
+        public void SetMatchTable(string[,] texts)
+        {
+            MatchDataTable.SetData(texts);
+            MatchDataTable.View.PrintText();
+            MatchDataTable.View.PrintOutline();
         }
     }
 }

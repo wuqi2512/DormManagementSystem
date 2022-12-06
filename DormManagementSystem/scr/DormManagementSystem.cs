@@ -1,30 +1,22 @@
-﻿
+﻿using static DormManagementSystem.Common;
 
 namespace DormManagementSystem
 {
     public class DormManagementSystem
     {
         const string dataPath = "..\\..\\..\\SystemData.bin";
-        StudentInformation[] studentArray;
-        StudentInformation addStudent;
+        MyArray<StudentInformation> studentArray;
 
-        public void AddStudent(StudentInformation student)
-        {
-            addStudent = student;
-            SaveData();
-            addStudent = null;
-            LoadData();
-        }
-
+        #region Save And Load Method
         public void LoadData()
         {
             using (BinaryReader reader = new BinaryReader(File.Open(dataPath, FileMode.Open)))
             {
                 int amount = reader.ReadInt32();
-                studentArray = new StudentInformation[amount];
+                studentArray = new MyArray<StudentInformation>(amount);
                 for (int i = 0; i < amount; i++)
                 {
-                    studentArray[i] = new StudentInformation();
+                    studentArray.Add(new StudentInformation());
                     studentArray[i].LoadData(reader);
                 }
             }
@@ -32,19 +24,11 @@ namespace DormManagementSystem
 
         public void SaveData()
         {
-            BuddleSortByStudentID();
+            BuddleSortByID();
             using (BinaryWriter writer = new BinaryWriter(File.Open(dataPath, FileMode.Open)))
             {
-                if (addStudent != null)
-                {
-                    writer.Write(studentArray.Length + 1);
-                    addStudent.SaveData(writer);
-                }
-                else
-                {
-                    writer.Write(studentArray.Length);
-                }
-                for (int i = 0; i < studentArray.Length; i++)
+                writer.Write(studentArray.Count);
+                for (int i = 0; i < studentArray.Count; i++)
                 {
                     studentArray[i].SaveData(writer);
                 }
@@ -59,7 +43,7 @@ namespace DormManagementSystem
             }
         }
 
-        public void SaveTextData()
+        public void SaveTestData()
         {
             using (BinaryWriter writer = new BinaryWriter(File.Open(dataPath, FileMode.Open)))
             {
@@ -79,13 +63,14 @@ namespace DormManagementSystem
             }
             LoadData();
         }
+        #endregion
 
         #region BuddleSort
-        public void BuddleSortByStudentID()
+        public void BuddleSortByID()
         {
-            for (int i = 0; i < studentArray.Length - 1; i++)
+            for (int i = 0; i < studentArray.Count - 1; i++)
             {
-                for (int j = 0; j < studentArray.Length - 1 - i; j++)
+                for (int j = 0; j < studentArray.Count - 1 - i; j++)
                 {
                     if (studentArray[j].StudentId > studentArray[j + 1].StudentId)
                     {
@@ -98,9 +83,9 @@ namespace DormManagementSystem
         }
         public void BuddleSortByName()
         {
-            for (int i = 0; i < studentArray.Length - 1; i++)
+            for (int i = 0; i < studentArray.Count - 1; i++)
             {
-                for (int j = 0; j < studentArray.Length - 1 - i; j++)
+                for (int j = 0; j < studentArray.Count - 1 - i; j++)
                 {
                     if (studentArray[j].Name[0] > studentArray[j + 1].Name[0])
                     {
@@ -113,9 +98,9 @@ namespace DormManagementSystem
         }
         public void BuddleSortByDormID()
         {
-            for (int i = 0; i < studentArray.Length - 1; i++)
+            for (int i = 0; i < studentArray.Count - 1; i++)
             {
-                for (int j = 0; j < studentArray.Length - 1 - i; j++)
+                for (int j = 0; j < studentArray.Count - 1 - i; j++)
                 {
                     if (studentArray[j].DormId > studentArray[j + 1].DormId)
                     {
@@ -128,10 +113,63 @@ namespace DormManagementSystem
         }
         #endregion
 
-        public string[,] GetAllStudent()
+        #region StringMatch
+        public int[] StringMatchByID(string str)
         {
-            string[,] result = new string[studentArray.Length, 3];
-            for (int i = 0; i < studentArray.Length; i++)
+            MyArray<int> indexArray = new MyArray<int>();
+            for (int i = 0; i < studentArray.Count; i++)
+            {
+                if (KMP(studentArray[i].StudentId.ToString(), str) != -1)
+                {
+                    indexArray.Add(i);
+                }
+            }
+
+            return indexArray.GetArray();
+        }
+        public int[] StringMatchByName(string str)
+        {
+            MyArray<int> indexArray = new MyArray<int>();
+            for (int i = 0; i < studentArray.Count; i++)
+            {
+                if (KMP(studentArray[i].Name, str) != -1)
+                {
+                    indexArray.Add(i);
+                }
+            }
+
+            return indexArray.GetArray();
+        }
+        public int[] StringMatchByDormID(string str)
+        {
+            MyArray<int> indexArray = new MyArray<int>();
+            for (int i = 0; i < studentArray.Count; i++)
+            {
+                if (KMP(studentArray[i].DormId.ToString(), str) != -1)
+                {
+                    indexArray.Add(i);
+                }
+            }
+
+            return indexArray.GetArray();
+        }
+        #endregion
+
+        public string[,] GetStudentData(int[] indexs)
+        {
+            string[,] result = new string[indexs.Length, 3];
+            for (int i = 0; i < indexs.Length; i++)
+            {
+                result[i, 0] = studentArray[indexs[i]].StudentId.ToString();
+                result[i, 1] = studentArray[indexs[i]].Name.ToString();
+                result[i, 2] = studentArray[indexs[i]].DormId.ToString();
+            }
+            return result;
+        }
+        public string[,] GetAllStudentData()
+        {
+            string[,] result = new string[studentArray.Count, 3];
+            for (int i = 0; i < studentArray.Count; i++)
             {
                 result[i, 0] = studentArray[i].StudentId.ToString();
                 result[i, 1] = studentArray[i].Name.ToString();
@@ -141,13 +179,21 @@ namespace DormManagementSystem
         }
         public int GetDataAmount()
         {
-            return studentArray.Length;
+            return studentArray.Count;
+        }
+        public void AddEmptyStudent()
+        {
+            studentArray.Add(new StudentInformation(-1, "-", -1));
+        }
+        public void DeleteStudent(int index)
+        {
+            studentArray.RemoveAt(index);
         }
 
         #region Modify Data Method
         public bool ModifyStudentID(int index, int studentId)
         {
-            if (index < 0 || index >= studentArray.Length)
+            if (index < 0 || index >= studentArray.Count)
                 return false;
 
             studentArray[index].StudentId = studentId;
@@ -155,7 +201,7 @@ namespace DormManagementSystem
         }
         public bool ModifyName(int index, string name)
         {
-            if (index < 0 || index >= studentArray.Length)
+            if (index < 0 || index >= studentArray.Count)
                 return false;
 
             studentArray[index].Name = name;
@@ -163,7 +209,7 @@ namespace DormManagementSystem
         }
         public bool ModifyDormID(int index, int dormId)
         {
-            if (index < 0 || index >= studentArray.Length)
+            if (index < 0 || index >= studentArray.Count)
                 return false;
 
             studentArray[index].DormId = dormId;

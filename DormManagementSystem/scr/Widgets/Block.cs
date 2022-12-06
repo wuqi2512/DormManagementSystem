@@ -1,4 +1,4 @@
-﻿
+﻿using static DormManagementSystem.Common;
 
 namespace DormManagementSystem.Widgets
 {
@@ -101,6 +101,13 @@ namespace DormManagementSystem.Widgets
                     }
                     break;
             }
+        }
+        public (int left, int top) GetPosition()
+        {
+            int left = Left + 1 + maxTextLength;
+            int top = Top + 1 + RowIndex;
+
+            return (left, top);
         }
     }
 }

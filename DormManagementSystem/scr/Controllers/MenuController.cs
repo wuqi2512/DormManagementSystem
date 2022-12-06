@@ -17,7 +17,7 @@ namespace DormManagementSystem.Controllers
 
             tableView = new Table();
             tableView.SetRowAndCol(7, 1);
-            tableView.SetTableTexts(new string[,] { { "保存", }, { "测试数据", }, { "修改", }, { "ID排序" }, { "姓名排序", }, { "寝室号排序" }, { "退出", }, });
+            tableView.SetTableTexts(new string[,] { { "保存", }, { "测试数据", }, { "修改", }, { "增加", }, { "ID排序" }, { "ID查找", }, { "退出", }, });
         }
 
         public override void Update(ConsoleKey key)
@@ -36,12 +36,42 @@ namespace DormManagementSystem.Controllers
         {
             switch (tableView.RowIndex)
             {
-                case 0: Model.SaveData(); UIManager.Instance.InfoBlock.AddInfo("保存成功"); break;
-                case 1: Model.SaveTextData(); UIManager.Instance.InfoBlock.AddInfo("读取测试数据成功"); break;
-                case 2: UIManager.Instance.SwitchCurrentController(UIManager.Instance.DataTable); break;
-                case 3: Model.BuddleSortByStudentID(); break;
-                case 4: Model.BuddleSortByName(); break;
-                case 5: Model.BuddleSortByDormID(); break;
+                case 0:
+                    Model.SaveData();
+                    UIManager.Instance.InfoBlock.AddInfo("保存成功");
+                    break;
+                case 1:
+                    Model.SaveTestData();
+                    UIManager.Instance.InfoBlock.AddInfo("读取测试数据成功");
+                    break;
+                case 2:
+                    UIManager.Instance.SwitchCurrentController(UIManager.Instance.DataTable);
+                    break;
+                case 3:
+                    Model.AddEmptyStudent();
+                    UIManager.Instance.SwitchCurrentController(UIManager.Instance.DataTable);
+                    UIManager.Instance.InfoBlock.AddInfo("请修改新增的数据");
+                    break;
+                case 4: Model.BuddleSortByID(); break;
+                case 5:
+                    UIManager.Instance.InfoBlock.AddInfo("请输入关键字");
+                    var position = UIManager.Instance.InfoBlock.GetPosition();
+                    Console.SetCursorPosition(position.left, position.top);
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    string input = Console.ReadLine();
+                    Console.ResetColor();
+                    var data = Model.StringMatchByID(input);
+                    if (data.Length == 0)
+                    {
+                        UIManager.Instance.InfoBlock.AddInfo($"无匹配结果");
+                    }
+                    else
+                    {
+                        UIManager.Instance.SetMatchTable(Model.GetStudentData(data));
+                        UIManager.Instance.InfoBlock.AddInfo($"查询:{input}");
+                        UIManager.Instance.SwitchCurrentController(UIManager.Instance.MatchDataTable);
+                    }
+                    break;
                 case 6: Environment.Exit(0); break;
             }
         }

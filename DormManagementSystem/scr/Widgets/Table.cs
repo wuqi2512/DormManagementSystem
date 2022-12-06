@@ -1,4 +1,4 @@
-﻿
+﻿using static DormManagementSystem.Common;
 
 namespace DormManagementSystem.Widgets
 {
@@ -43,7 +43,6 @@ namespace DormManagementSystem.Widgets
                 }
             }
         }
-
 
 
         public override void PrintOutline(ConsoleColor fgColor = ConsoleColor.White)
@@ -112,23 +111,6 @@ namespace DormManagementSystem.Widgets
             int top = Top + 1 + RowIndex * 2;
             return (left, top);
         }
-
-        /*        public void ClearTableInner()
-                {
-                    for (int i = 0; i < Height - 2; i++)
-                    {
-                        PrintRow(Left + 1, Top + 1 + i, new string(' ', Width - 2));
-                    }
-                }
-                public void ClearOutline()
-                {
-                    PrintRow(Left, Top, new string(' ', Width));
-                    PrintRow(Left, Top + Height - 1, new string(' ', Width));
-
-                    PrintCol(Left, Top, new string(' ', Height));
-                    PrintCol(Left + Width - 1, Top, new string(' ', Height));
-                }*/
-
         public override void ChangeIndex(Direction direct)
         {
             switch (direct)
